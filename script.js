@@ -6,23 +6,27 @@ document.addEventListener('DOMContentLoaded', () => {
       private: 'Private',
       public: 'Public',
       addEntry: '+ Add Entry',
-      langBtn: 'Language'
+      langBtn: 'Language',
+      welcome: 'Welcome! Feel free to express your thoughts & feelings here ~~~ ♪───Ｏ（≧∇≦）Ｏ────♪',
+      dataTitle: 'Data Section',
+      dataContent: 'Here you can place some information or resources.'
     },
     zh: {
       siteName: '心灵树洞',
       private: '私密',
       public: '公开',
       addEntry: '添加项目',
-      langBtn: '语言'
+      langBtn: '语言',
+      welcome: '欢迎！请随意表达您的想法和感受 ~~~ ♪───Ｏ（≧∇≦）Ｏ────♪',
+      dataTitle: '资料区',
+      dataContent: '这里可以放置一些信息或资源。'
     }
   };
   let currentLang = 'en';
   const langBtn = document.getElementById('lang-btn');
   const langMenu = document.getElementById('lang-menu');
 
-  // 切换菜单显示
   langBtn.addEventListener('click', () => langMenu.classList.toggle('hidden'));
-  // 选择语言
   langMenu.querySelectorAll('li').forEach(li => {
     li.addEventListener('click', () => {
       currentLang = li.dataset.lang;
@@ -31,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
   function updateText() {
-    // 按 data-i18n-key 更新所有静态文本
     document.querySelectorAll('[data-i18n-key]').forEach(el => {
       const key = el.getAttribute('data-i18n-key');
       el.textContent = translations[currentLang][key];
@@ -49,93 +52,109 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveDraftBtn = document.getElementById('save-draft-btn');
   const saveFinalBtn = document.getElementById('save-final-btn');
   const textarea = document.getElementById('entry-text');
+  let currentEditingEntry = null;
 
-  // 打开弹窗
   entryNew.addEventListener('click', () => {
+    currentEditingEntry = null;
     textarea.value = '';
     modal.classList.add('show');
   });
   closeBtn.addEventListener('click', () => modal.classList.remove('show'));
 
-  // 创建条目
   function createEntry(text, isDraft = true, isFinal = false) {
     const entry = document.createElement('div');
     entry.className = 'entry';
-    // 左上标记
     const label = document.createElement('div');
     label.className = 'label';
     label.textContent = isFinal ? 'Final' : 'Draft';
     entry.appendChild(label);
-    // 内容
-    const p = document.createElement('p');
-    p.textContent = text;
-    entry.appendChild(p);
-    // 右上操作
+    const pre = document.createElement('pre');
+    pre.textContent = text;
+    entry.appendChild(pre);
     const actions = document.createElement('div');
     actions.className = 'actions';
-    // Star
     const star = document.createElement('span');
     star.textContent = '☆';
     star.addEventListener('click', () => {
       star.textContent = star.textContent === '☆' ? '★' : '☆';
     });
     actions.appendChild(star);
-    // Edit（仅 Draft 显示）
     if (isDraft) {
       const edit = document.createElement('span');
       edit.textContent = '✎';
       edit.addEventListener('click', () => {
-        textarea.value = text;
+        currentEditingEntry = entry;
+        textarea.value = pre.textContent;
         modal.classList.add('show');
       });
       actions.appendChild(edit);
     }
-    // Delete
     const del = document.createElement('span');
     del.textContent = '🗑';
     del.addEventListener('click', () => {
       if (confirm('Are you sure to delete this entry?')) {
-        // 同时从 public 区移除
-        if (!isDraft && !isFinal) removePublic(text);
         entry.remove();
       }
     });
     actions.appendChild(del);
     entry.appendChild(actions);
 
-    // 公布按钮（仅 Draft 显示）
-    if (isDraft) {
-      const pubBtn = document.createElement('button');
-      pubBtn.textContent = translations[currentLang].public;
-      pubBtn.addEventListener('click', () => {
-        publishEntry(text);
-        pubBtn.disabled = true;
+    const pubBtn = document.createElement('button');
+    pubBtn.textContent = translations[currentLang].public;
+    pubBtn.addEventListener('click', () => {
+      publishEntry(text);
+      pubBtn.disabled = true;
+    });
+    entry.appendChild(pubBtn);
+
+    if (text.split('\n').length > 1) {
+      const toggle = document.createElement('span');
+      toggle.className = 'toggle';
+      toggle.textContent = '展开';
+      toggle.addEventListener('click', () => {
+        if (entry.classList.contains('expanded')) {
+          entry.classList.remove('expanded');
+          toggle.textContent = '展开';
+        } else {
+          entry.classList.add('expanded');
+          toggle.textContent = '收起';
+        }
       });
-      entry.appendChild(pubBtn);
+      entry.appendChild(toggle);
     }
 
     return entry;
   }
 
-  // 发布到 Public
   function publishEntry(text) {
     const pubEntry = createEntry(text, false, false);
     publicEntries.appendChild(pubEntry);
   }
 
-  // 保存草稿
   saveDraftBtn.addEventListener('click', () => {
     const txt = textarea.value.trim();
     if (!txt) return alert('请输入内容！');
-    privateEntries.appendChild(createEntry(txt, true, false));
+    if (currentEditingEntry) {
+      currentEditingEntry.querySelector('pre').textContent = txt;
+    } else {
+      privateEntries.appendChild(createEntry(txt, true, false));
+    }
     modal.classList.remove('show');
   });
 
-  // 定稿
   saveFinalBtn.addEventListener('click', () => {
-    const txt = textarea.value.trim();
-    if (!txt) return alert('请输入内容！');
-    privateEntries.appendChild(createEntry(txt, false, true));
-    modal.classList.remove('show');
+    if (confirm('Save as Final? You won\'t be able to edit this entry after saving.')) {
+      const txt = textarea.value.trim();
+      if (!txt) return alert('请输入内容！');
+      if (currentEditingEntry) {
+        currentEditingEntry.querySelector('pre').textContent = txt;
+        currentEditingEntry.querySelector('.label').textContent = 'Final';
+        const editBtn = currentEditingEntry.querySelector('.actions span[textContent="✎"]');
+        if (editBtn) editBtn.remove();
+      } else {
+        privateEntries.appendChild(createEntry(txt, false, true));
+      }
+      modal.classList.remove('show');
+    }
   });
 });
