@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Emotional Tree Hollow</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header id="main-header">
+    <div class="container header-flex">
+      <h1 class="logo" data-i18n-key="siteName">Emotional Tree Hollow</h1>
+      <div class="lang-selector">
+        <button id="lang-btn" data-i18n-key="langBtn">Language</button>
+        <ul id="lang-menu" class="hidden">
+          <li data-lang="en">English (Default)</li>
+          <li data-lang="zh">简体中文</li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <section id="hero">
+    <h2 data-i18n-key="siteName">Emotional Tree Hollow</h2>
+    <p data-i18n-key="welcome">Welcome! Feel free to express your thoughts & feelings here ~~~ ♪───Ｏ（≧∇≦）Ｏ────♪</p>
+  </section>
+
+  <section id="data">
+    <div class="container">
+      <h3 data-i18n-key="dataTitle">Some Facts about Stress</h3>
+      <div class="data-content">
+        <div class="data-block wide">
+          <h4 data-i18n-key="whatIsStress">What is Stress</h4>
+          <div class="data-details"></div>
+        </div>
+        <div class="data-block tall">
+          <h4 data-i18n-key="typesOfStress">Types of Stress</h4>
+          <div class="data-details">
+            <div class="sub-block" data-i18n-key="acuteStress">Acute Stress</div>
+            <div class="sub-block" data-i18n-key="episodicAcuteStress">Episodic Acute Stress</div>
+            <div class="sub-block" data-i18n-key="chronicStress">Chronic Stress</div>
+          </div>
+        </div>
+        <div class="data-block tall">
+          <h4 data-i18n-key="symptoms">Symptoms</h4>
+          <div class="data-details">
+            <div class="sub-block" data-i18n-key="physicalSymptoms">Physical Symptoms</div>
+            <div class="sub-block" data-i18n-key="psychologicalSymptoms">Psychological/Mental Symptoms</div>
+            <div class="sub-block" data-i18n-key="behaviorSymptoms">Behavior Symptoms</div>
+          </div>
+        </div>
+        <div class="data-block medium">
+          <h4 data-i18n-key="impactsOfStress">Impacts of Stress on the Body</h4>
+          <div class="data-details"></div>
+        </div>
+        <div class="data-block wide">
+          <h4 data-i18n-key="howToDealWithStress">How to Deal with Stress</h4>
+          <div class="data-details"></div>
+        </div>
+      </div>
+      <div class="data-reference">
+        Cleveland Clinic, n.d. “Stress.” Reviewed May 5, 2024. Available at: https://my.clevelandclinic.org/health/diseases/11874-stress
+      </div>
+    </div>
+  </section>
+
+  <main id="content" class="container">
+    <div class="gallery-title">
+      <h3 data-i18n-key="squareTitle">Square</h3>
+    </div>
+    <div class="galleries">
+      <div class="gallery private">
+        <h4 data-i18n-key="private">Private</h4>
+        <div class="entry entry-new">
+          <span class="placeholder" data-i18n-key="addEntry">+ Add Entry</span>
+        </div>
+        <div class="entries" id="private-entries"></div>
+      </div>
+      <div class="gallery public">
+        <h4 data-i18n-key="public">Public</h4>
+        <div class="entries" id="public-entries"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="main-footer">
+    <div class="container">
+      <p>© 2025 <span data-i18n-key="siteName">Emotional Tree Hollow</span></p>
+    </div>
+  </footer>
+
+  <div id="entry-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header toolbar">
+        <button class="close-btn">×</button>
+      </div>
+      <textarea id="entry-text" data-i18n-placeholder="placeholder"></textarea>
+      <div class="modal-footer">
+        <button id="save-btn" data-i18n-key="save">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
